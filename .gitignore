@@ -1,0 +1,61 @@
+# ====================================================================
+# 1. HỆ THỐNG & IDE (Chặn file rác của hệ điều hành và trình chỉnh sửa)
+# ====================================================================
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+Thumbs.db
+.DS_Store
+
+# ====================================================================
+# 2. TÀI LIỆU CÁ NHÂN (Nên lưu riêng, không nên đẩy lên GitHub)
+# ====================================================================
+*.docx
+*.doc
+*.pdf
+*.drawio
+*.sql
+
+# ====================================================================
+# 3. BACKEND (Spring Boot)
+# ====================================================================
+backend/target/
+backend/.mvn/
+backend/*.class
+backend/.factorypath
+
+# ====================================================================
+# 4. FRONTEND (ReactJS / Next.js)
+# ====================================================================
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/.pnpm-debug.log*
+
+# ====================================================================
+# 5. CÁC SERVICE PYTHON (ai-service & recommendation-service)
+# ====================================================================
+# Chặn môi trường ảo (env, venv, .venv) trong cả 2 thư mục python
+**/env/
+**/venv/
+**/.venv/
+**/ENV/
+
+# Chặn file rác compile của Python
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.pytest_cache/
+
+# ====================================================================
+# 6. BẢO MẬT (Các file chứa tài khoản, mật khẩu, API Key, Database URL)
+# ====================================================================
+**/.env
+**/.env.local
+**/.env.*.local
