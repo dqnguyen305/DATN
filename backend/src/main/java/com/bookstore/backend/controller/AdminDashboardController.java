@@ -1,6 +1,7 @@
 package com.bookstore.backend.controller;
 
 import com.bookstore.backend.dto.AdminDashboardResponse;
+import com.bookstore.backend.dto.RevenueChartItem;
 import com.bookstore.backend.entity.Order;
 import com.bookstore.backend.repository.BookRepository;
 import com.bookstore.backend.repository.OrderRepository;
@@ -16,6 +17,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -84,11 +88,34 @@ public class AdminDashboardController {
                 .filter(amount -> amount != null)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
+        Map<String, BigDecimal> revenueByDate =
+                orders.stream()
+                        .collect(Collectors.groupingBy(
+                                order -> order.getOrderDate().toLocalDate().toString(),
+                                TreeMap::new,
+                                Collectors.mapping(
+                                        Order::getTotalAmount,
+                                        Collectors.reducing(
+                                                BigDecimal.ZERO,
+                                                BigDecimal::add
+                                        )
+                                )
+                        ));
+
+        List<RevenueChartItem> chart = revenueByDate.entrySet()
+                .stream()
+                .map(item -> new RevenueChartItem(
+                        item.getKey(),
+                        item.getValue()
+                ))
+                .toList();
+
         return AdminDashboardResponse.builder()
                 .totalBooks(bookRepository.count())
                 .totalUsers(userRepository.count())
                 .totalOrders((long) orders.size())
                 .totalRevenue(revenue)
+                .chart(chart)
                 .build();
     }
 }
