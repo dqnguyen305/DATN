@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import cartApi from "../api/cartApi";
 import orderApi from "../api/orderApi";
+import paymentApi from "../api/paymentApi";
 
 function Cart() {
   const [cart, setCart] = useState(null);
   const [address, setAddress] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("COD");
+  const [isProcessing, setIsProcessing] = useState(false); // Tránh người dùng spam click nút đặt hàng
 
   useEffect(() => {
     fetchCart();
@@ -15,7 +18,7 @@ function Cart() {
       const res = await cartApi.getCart();
       setCart(res.data);
     } catch (error) {
-      console.log(error);
+      console.error("Lỗi lấy giỏ hàng:", error);
     }
   };
 
@@ -24,31 +27,53 @@ function Cart() {
       await cartApi.removeItem(cartItemId);
       fetchCart();
     } catch (error) {
-      console.log(error);
+      console.error("Lỗi xóa sản phẩm:", error);
     }
   };
 
   const handleCheckout = async () => {
     if (!address.trim()) {
-      alert("Vui lòng nhập địa chỉ");
+      alert("Vui lòng nhập địa chỉ giao hàng");
       return;
     }
 
+    setIsProcessing(true);
     try {
-      await orderApi.checkout({
+      const order = await orderApi.checkout({
         shippingAddress: address,
+        paymentMethod,
       });
-      alert("Đặt hàng thành công!");
-      fetchCart();
-      setAddress("");
+
+      // 1. Trường hợp thanh toán COD
+      if (paymentMethod === "COD") {
+        alert("Đặt hàng thành công!");
+        fetchCart();
+        setAddress("");
+        return;
+      }
+
+      // 2. Trường hợp thanh toán trực tuyến qua cổng VNPay
+      if (paymentMethod === "VNPAY") {
+        const payment = await paymentApi.create(order.data.orderId);
+        window.location.href = payment.data.paymentUrl;
+        return;
+      }
     } catch (error) {
-      console.log(error);
-      alert("Thanh toán thất bại");
+      console.error("Lỗi xử lý đặt hàng:", error);
+      alert("Đã có lỗi xảy ra trong quá trình thanh toán");
+    } finally {
+      setIsProcessing(false);
     }
   };
 
   if (!cart) {
-    return <div className="container mt-5">Loading...</div>;
+    return (
+      <div className="container mt-5 text-center">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -56,7 +81,7 @@ function Cart() {
       <h2 className="fw-bold mb-4">🛒 Giỏ hàng</h2>
 
       {cart.items.length === 0 ? (
-        <div className="alert alert-info">Giỏ hàng trống</div>
+        <div className="alert alert-info shadow-sm">Giỏ hàng của bạn đang trống.</div>
       ) : (
         <div className="row">
           {/* Danh sách sản phẩm bên trái */}
@@ -77,21 +102,25 @@ function Cart() {
                     />
                   </div>
                   <div className="col-md-9">
-                    <div className="card-body">
-                      <h5 className="fw-bold">{item.title}</h5>
-                      <p className="text-muted">Số lượng: {item.quantity}</p>
-                      <h6 className="text-danger">
-                        {Number(item.price).toLocaleString()} đ
-                      </h6>
-                      <h6 className="mt-3">
-                        Thành tiền: {Number(item.subtotal).toLocaleString()} đ
-                      </h6>
-                      <button
-                        className="btn btn-danger mt-3"
-                        onClick={() => handleRemove(item.cartItemId)}
-                      >
-                        Xóa sản phẩm
-                      </button>
+                    <div className="card-body d-flex flex-column h-100 justify-content-between">
+                      <div>
+                        <h5 className="fw-bold text-dark">{item.title}</h5>
+                        <p className="text-muted mb-2">Số lượng: {item.quantity}</p>
+                        <h6 className="text-muted small">
+                          Đơn giá: {Number(item.price).toLocaleString()} đ
+                        </h6>
+                      </div>
+                      <div className="d-flex justify-content-between align-items-end mt-3">
+                        <h6 className="fw-bold m-0 text-primary">
+                          Thành tiền: {Number(item.subtotal).toLocaleString()} đ
+                        </h6>
+                        <button
+                          className="btn btn-outline-danger btn-sm"
+                          onClick={() => handleRemove(item.cartItemId)}
+                        >
+                          Xóa sản phẩm
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -101,70 +130,53 @@ function Cart() {
 
           {/* Phần tổng kết và thanh toán bên phải */}
           <div className="col-lg-4">
-            <div className="card shadow-lg border-0 p-4">
-
-              <h4 className="fw-bold">
-                Tổng đơn hàng
-              </h4>
-
+            <div className="card shadow-sm border-0 p-4 bg-light">
+              <h4 className="fw-bold mb-3">Tổng đơn hàng</h4>
               <hr />
 
-              <div
-                className="
-                  d-flex
-                  justify-content-between
-                  mb-3
-                "
-              >
-                <span>Số sản phẩm</span>
-
-                <b>
-                  {cart.items.length}
-                </b>
+              <div className="d-flex justify-content-between mb-3">
+                <span className="text-muted">Số sản phẩm</span>
+                <b className="text-dark">{cart.items.length}</b>
               </div>
 
-              <div
-                className="
-                  d-flex
-                  justify-content-between
-                  mb-4
-                "
-              >
-                <span>Tổng tiền</span>
-
-                <h4 className="text-danger">
-                  {Number(
-                    cart.totalAmount
-                  ).toLocaleString()}
-                  đ
+              <div className="d-flex justify-content-between mb-4 align-items-center">
+                <span className="text-muted">Tổng tiền</span>
+                <h4 className="text-danger fw-bold mb-0">
+                  {Number(cart.totalAmount).toLocaleString()} đ
                 </h4>
               </div>
 
-              <input
-                className="form-control"
-                placeholder="Nhập địa chỉ giao hàng..."
-                value={address}
-                onChange={(e) =>
-                  setAddress(
-                    e.target.value
-                  )
-                }
-              />
+              <div className="mb-3">
+                <label className="form-label fw-bold text-secondary">Địa chỉ giao hàng</label>
+                <input
+                  className="form-control"
+                  placeholder="Nhập địa chỉ nhận sách..."
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  disabled={isProcessing}
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="form-label fw-bold text-secondary">Phương thức thanh toán</label>
+                <select
+                  className="form-select"
+                  value={paymentMethod}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                  disabled={isProcessing}
+                >
+                  <option value="COD">Thanh toán khi nhận hàng (COD)</option>
+                  <option value="VNPAY">Cổng thanh toán VNPay</option>
+                </select>
+              </div>
 
               <button
-                className="
-                  btn
-                  btn-success
-                  w-100
-                  mt-4
-                  py-3
-                  fw-bold
-                "
+                className="btn btn-success w-100 py-2.5 fw-bold shadow-sm"
                 onClick={handleCheckout}
+                disabled={isProcessing}
               >
-                Đặt hàng ngay
+                {isProcessing ? "Đang xử lý..." : "Đặt hàng ngay"}
               </button>
-
             </div>
           </div>
         </div>

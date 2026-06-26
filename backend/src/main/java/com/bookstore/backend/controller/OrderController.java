@@ -3,10 +3,10 @@ package com.bookstore.backend.controller;
 import com.bookstore.backend.dto.OrderResponse;
 import com.bookstore.backend.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -17,10 +17,17 @@ public class OrderController {
     private final OrderService orderService;
 
     @GetMapping
-    public ResponseEntity<List<OrderResponse>> getAllOrders() {
+    public ResponseEntity<Page<OrderResponse>> getAllOrders(
+
+            @RequestParam(defaultValue = "0")
+            int page,
+
+            @RequestParam(defaultValue = "8")
+            int size
+    ) {
 
         return ResponseEntity.ok(
-                orderService.getAllOrders()
+                orderService.getAllOrders(page, size)
         );
     }
 

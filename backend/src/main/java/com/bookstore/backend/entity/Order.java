@@ -45,4 +45,11 @@ public class Order {
             orphanRemoval = true
     )
     private List<OrderDetail> orderDetails = new ArrayList<>();
+    @Column(name = "payment_method")
+    private String paymentMethod;
+    @OneToOne(
+            mappedBy = "order",
+            cascade = CascadeType.ALL
+    )
+    private Payment payment;
 }

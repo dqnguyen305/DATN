@@ -1,0 +1,207 @@
+/* --- Khung viền Header dùng dải màu Gradient Pastel của bạn --- */
+.bookstore-header {
+  /* Chuyển màu mượt mà từ Hồng phấn qua Cam sữa */
+  background: linear-gradient(135deg, #f5cec7 0%, #e79796 35%, #ffc98b 70%, #ffb284 100%);
+  border-bottom: none;
+  box-shadow: 0 4px 15px rgba(231, 151, 150, 0.15); /* Đổ bóng mang sắc hồng nhẹ đồng bộ */
+  z-index: 1000;
+}
+
+.header-content {
+  min-height: 74px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* --- Logo Màu Tối Để Nổi Bật Trên Nền Pastel --- */
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #4a3b32; /* Màu nâu đất trầm sang trọng, hợp với tone pastel */
+  text-decoration: none;
+  font-size: 25px;
+  font-weight: 850;
+  letter-spacing: -0.5px;
+}
+
+.brand-icon {
+  font-size: 26px;
+  line-height: 1;
+}
+
+/* --- Thanh Điều Hướng Menu --- */
+.header-navigation {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Kiểu dáng các chữ điều hướng tối giản */
+.nav-link-custom,
+.nav-cart-button,
+.nav-orders-button {
+  color: #5c4d42; /* Chữ màu nâu gỗ mịn dịu mắt */
+  text-decoration: none;
+  font-size: 15.5px;
+  font-weight: 700;
+  padding: 9px 14px;
+  border-radius: 10px;
+  background: transparent;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+/* Hiệu ứng phủ một lớp trắng mờ nhẹ khi đưa chuột vào */
+.nav-link-custom:hover,
+.nav-cart-button:hover,
+.nav-orders-button:hover {
+  color: #2b1f17;
+  background: rgba(255, 255, 255, 0.35); 
+}
+
+/* --- Nút bấm Avatar người dùng --- */
+.user-menu-wrapper {
+  position: relative;
+  margin-left: 6px;
+}
+
+.avatar-button {
+  width: 38px;
+  height: 38px;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  color: #ffffff;
+  /* Avatar sử dụng màu xanh rêu nhẹ #C6C009C cuối dải màu của bạn để tạo điểm nhấn đối lập */
+  background: #c6c09c; 
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(198, 192, 156, 0.4);
+  transition: all 0.2s ease;
+}
+
+.avatar-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(198, 192, 156, 0.6);
+}
+
+/* Menu con bung xuống bên trong */
+.account-dropdown {
+  position: absolute;
+  top: 48px;
+  right: 0;
+  width: 240px;
+  padding: 8px;
+  background: #ffffff;
+  border: 1px solid #f1e4e2;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(74, 59, 50, 0.08);
+  animation: dropdownAppear 0.15s ease-out;
+}
+
+@keyframes dropdownAppear {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.account-dropdown-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 8px 10px;
+}
+
+.account-avatar-small {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  color: #ffffff;
+  background: #c6c09c;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.account-name {
+  max-width: 160px;
+  overflow: hidden;
+  color: #4a3b32;
+  font-size: 14px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.account-text {
+  margin-top: 1px;
+  color: #8c7a6e;
+  font-size: 11px;
+}
+
+.dropdown-divider {
+  height: 1px;
+  margin: 4px 0;
+  background: #fcf6f5;
+}
+
+.dropdown-item-custom {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border: 0;
+  border-radius: 8px;
+  color: #5c4d42;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.dropdown-item-custom:hover {
+  color: #e79796;
+  background: #fff5f4;
+}
+
+.logout-item {
+  color: #ef4444;
+}
+
+.logout-item:hover {
+  color: #dc2626;
+  background: #fef2f2;
+}
+
+/* --- Responsive chuẩn thiết bị di động --- */
+@media (max-width: 768px) {
+  .header-content {
+    min-height: auto;
+    padding: 12px 0;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .header-navigation {
+    width: 100%;
+    justify-content: center;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+
+  .nav-link-custom,
+  .nav-cart-button,
+  .nav-orders-button {
+    padding: 6px 10px;
+    font-size: 13.5px;
+  }
+}

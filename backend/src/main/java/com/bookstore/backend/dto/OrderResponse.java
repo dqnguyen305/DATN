@@ -15,6 +15,8 @@ public class OrderResponse {
 
     private Integer userId;
 
+    private String username;
+
     private LocalDateTime orderDate;
 
     private String status;
@@ -22,6 +24,11 @@ public class OrderResponse {
     private BigDecimal totalAmount;
 
     private String shippingAddress;
+
+    private String paymentMethod;
+
+    private String paymentStatus;
+    private String transactionCode;
 
     private List<OrderItemResponse> items;
 }

@@ -5,6 +5,8 @@ import com.bookstore.backend.dto.OrderResponse;
 import com.bookstore.backend.entity.User;
 import com.bookstore.backend.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -23,29 +25,35 @@ public class UserOrderController {
             @RequestBody CheckoutRequest request,
             Authentication authentication
     ) {
+        User user = (User) authentication.getPrincipal();
 
-        User user =
-                (User) authentication.getPrincipal();
-
-        OrderResponse order =
-                orderService.checkout(
-                        user,
-                        request.getShippingAddress()
-                );
+        OrderResponse order = orderService.checkout(
+                user,
+                request.getShippingAddress(),
+                request.getPaymentMethod()
+        );
 
         return ResponseEntity.ok(order);
     }
 
     @GetMapping("/my-orders")
-    public ResponseEntity<List<OrderResponse>> myOrders(
+    public ResponseEntity<List<OrderResponse>> myOrders(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(orderService.getMyOrders(user));
+    }
+
+    @GetMapping("/{id}/invoice")
+    public ResponseEntity<byte[]> exportInvoice(
+            @PathVariable Integer id,
             Authentication authentication
-    ) {
+    ) throws Exception {
+        User user = (User) authentication.getPrincipal();
 
-        User user =
-                (User) authentication.getPrincipal();
+        byte[] pdf = orderService.exportInvoice(id, user);
 
-        return ResponseEntity.ok(
-                orderService.getMyOrders(user)
-        );
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=invoice-" + id + ".pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
     }
 }

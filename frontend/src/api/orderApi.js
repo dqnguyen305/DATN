@@ -37,6 +37,14 @@ const orderApi = {
             `/admin/orders/${id}/status`,
             { status }
         );
+    },
+    downloadInvoice(id) {
+        return axiosClient.get(
+            `/orders/${id}/invoice`,
+            {
+                responseType: "blob"
+            }
+        );
     }
 };
 

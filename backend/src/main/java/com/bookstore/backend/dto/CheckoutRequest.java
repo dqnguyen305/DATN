@@ -6,4 +6,6 @@ import lombok.Data;
 public class CheckoutRequest {
 
     private String shippingAddress;
+
+    private String paymentMethod;
 }

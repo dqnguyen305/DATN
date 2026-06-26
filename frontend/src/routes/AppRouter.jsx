@@ -6,6 +6,7 @@ import Home from "../pages/Home";
 import BookDetail from "../pages/BookDetail";
 import Cart from "../pages/Cart";
 import Orders from "../pages/Orders";
+import PaymentSuccess from "../pages/PaymentSuccess"; // ĐÃ SỬA: Import component này vào
 
 import ProtectedAdminRoute from "../components/admin/ProtectedAdminRoute";
 import AdminLayout from "../components/admin/AdminLayout";
@@ -22,7 +23,7 @@ import AddCategory from "../pages/admin/categories/AddCategory";
 import EditCategory from "../pages/admin/categories/EditCategory";
 
 import AuthorList from "../pages/admin/authors/AuthorList";
-import AddAuthor  from "../pages/admin/authors/AddAuthor";
+import AddAuthor from "../pages/admin/authors/AddAuthor";
 import EditAuthor from "../pages/admin/authors/EditAuthor";
 
 import OrderList from "../pages/admin/order/OrderList";
@@ -32,6 +33,9 @@ import UserList from "../pages/admin/user/UserList";
 import UserDetail from "../pages/admin/user/UserDetail";
 import EditUser from "../pages/admin/user/EditUser";
 
+import Profile from "../pages/Profile";
+import ChangePassword from "../pages/ChangePassword";
+
 function AppRouter() {
   return (
     <Routes>
@@ -40,6 +44,7 @@ function AppRouter() {
       <Route path="/register" element={<Register />} />
 
       {/* ================= USER (CLIENT WITH LAYOUT) ================= */}
+      {/* ĐÃ SỬA: Bổ sung thẻ mở Route cha bọc các route con của User */}
       <Route
         element={
           <ProtectedRoute>
@@ -48,22 +53,13 @@ function AppRouter() {
         }
       >
         <Route path="/" element={<Home />} />
-
-        <Route
-          path="/books/:id"
-          element={<BookDetail />}
-        />
-
-        <Route
-          path="/cart"
-          element={<Cart />}
-        />
-
-        <Route
-          path="/orders"
-          element={<Orders />}
-        />
-      </Route>
+        <Route path="/books/:id" element={<BookDetail />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/orders" element={<Orders />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/change-password" element={<ChangePassword />} />
+        <Route path="/payment-success" element={<PaymentSuccess />} />
+      </Route> {/* ĐÃ SỬA: Bổ sung thẻ đóng Route cha bọc User */}
 
       {/* ================= ADMIN (WITH LAYOUT & PROTECTED) ================= */}
       <Route

@@ -45,6 +45,10 @@ function Login() {
           "token",
           res.data.token
         );
+        localStorage.setItem(
+          "username",
+          form.username
+        );
 
         alert("Đăng nhập thành công!");
 

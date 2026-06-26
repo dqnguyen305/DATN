@@ -67,7 +67,18 @@ public class SecurityConfig {
                         .requestMatchers("/api/cart/**")
                         .hasAnyRole("USER", "ADMIN")
 
+
                         .requestMatchers("/api/orders/**")
+                        .hasAnyRole("USER", "ADMIN")
+
+
+                        .requestMatchers("/api/payments/**")
+                        .hasAnyRole("USER", "ADMIN")
+
+                        .requestMatchers(
+                                "/api/users/me",
+                                "/api/users/change-password"
+                        )
                         .hasAnyRole("USER", "ADMIN")
 
                         .requestMatchers("/api/users/**")

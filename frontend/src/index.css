@@ -1,6 +1,13 @@
+@import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap");
+
+* {
+  font-family: "Be Vietnam Pro", Arial, sans-serif;
+}
+
 body {
   background: #f5f7fb;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Be Vietnam Pro", Arial, sans-serif;
+  color: #212529;
 }
 
 .shadow-hover {

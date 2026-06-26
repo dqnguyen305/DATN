@@ -1,0 +1,26 @@
+/* Thu hẹp khoảng cách tổng thể trong bong bóng chat của AI */
+.ai-msg .markdown-content p {
+  margin-top: 0;
+  margin-bottom: 6px;      /* Giảm margin bottom xuống thấp */
+  line-height: 1.4;        /* Thu hẹp khoảng cách giữa các dòng chữ */
+}
+
+/* Xử lý phần danh sách (ul, ol) để không bị đẩy quá xa */
+.ai-msg .markdown-content ul, 
+.ai-msg .markdown-content ol {
+  padding-left: 20px;      /* Thu nhỏ khoảng lùi đầu dòng */
+  margin-top: 0;
+  margin-bottom: 4px;      /* Giảm khoảng cách phía dưới danh sách */
+}
+
+/* Thu hẹp khoảng cách giữa các dòng gạch đầu dòng (li) */
+.ai-msg .markdown-content li {
+  margin-top: 2px;
+  margin-bottom: 4px;      /* Đảm bảo các mục sát lại gần nhau hơn */
+  line-height: 1.4;
+}
+
+/* Xóa khoảng trống thừa của phần tử cuối cùng trong bong bóng chat */
+.ai-msg .markdown-content > *:last-child {
+  margin-bottom: 0;
+}
